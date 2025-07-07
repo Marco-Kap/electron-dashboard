@@ -1,22 +1,33 @@
-const path = require("path");
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: "./src/renderer.ts",
+  entry: './src/renderer/index.tsx', // Entry point for React code
   output: {
-    filename: "renderer.js",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        use: "ts-loader",
-        exclude: /node_modules/
-      }
-    ]
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+    ],
   },
-  resolve: {
-    extensions: [".ts", ".js"]
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/renderer/index.html', // Path to your HTML template
+    }),
+  ],
+  devServer: {
+    static: path.join(__dirname, 'dist'),
+    hot: true,
   },
-  target: "electron-renderer"
 };
